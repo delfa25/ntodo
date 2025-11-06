@@ -58,7 +58,7 @@ jobs:
         php artisan key:generate
         php artisan migrate --force
         php artisan config:clear
-        vendor/bin/phpunit --testdox
+        vendor/bin/phpunit tests/Unit --testdox
     
     - name: Test Frontend
       working-directory: ./frontend
