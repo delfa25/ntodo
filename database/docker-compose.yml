@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  mysql:
+    image: mysql:8.0
+    container_name: contacts_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: contacts_db
+      MYSQL_ROOT_PASSWORD: root_password
+      MYSQL_USER: contacts_user
+      MYSQL_PASSWORD: contacts_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./init:/docker-entrypoint-initdb.d
+    networks:
+      - contacts_network
+
+volumes:
+  mysql_data:
+
+networks:
+  contacts_network:
+    driver: bridge
