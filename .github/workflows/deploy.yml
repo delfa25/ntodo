@@ -1,0 +1,38 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build Images
+      run: |
+        docker build -t ntodo-backend:${{ github.sha }} ./backend
+        docker build -t ntodo-frontend:${{ github.sha }} ./frontend
+    
+    - name: Generate Deployment Files
+      run: |
+        echo "🚀 Deployment ready for:"
+        echo "Backend: ntodo-backend:${{ github.sha }}"
+        echo "Frontend: ntodo-frontend:${{ github.sha }}"
+        echo "Kubernetes manifests available in k8s/"
+        
+    - name: Update K8s Manifests
+      run: |
+        sed -i "s|ntodo-backend:latest|ntodo-backend:${{ github.sha }}|g" k8s/backend.yaml
+        sed -i "s|ntodo-frontend:latest|ntodo-frontend:${{ github.sha }}|g" k8s/frontend.yaml
+        echo "✅ Manifests updated with new image tags"
+        
+    - name: Deployment Instructions
+      run: |
+        echo "📋 To deploy:"
+        echo "kubectl apply -f k8s/"
+        echo "kubectl rollout status deployment/backend -n ntodo"
+        echo "kubectl rollout status deployment/frontend -n ntodo"

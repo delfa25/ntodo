@@ -1,20 +1,18 @@
-# Configuration GitHub Actions
+# GitHub Actions
 
-## Aucun secret requis
+## Workflows
 
-Les workflows sont configurés pour :
-- Tests automatiques
-- Build local des images Docker
-- Validation des manifestes Kubernetes
+### build.yml - Build & Test
+**Déclencheurs :** Push sur `main`/`develop`, Pull Requests
+- ✅ Tests backend PHP
+- ✅ Build frontend React
+- ✅ Build images Docker
+- ✅ Validation Kubernetes
 
-## Workflows disponibles
+### deploy.yml - Déploiement
+**Déclencheurs :** Manuel, Release
+- 🚀 Build images avec tags
+- 📦 Génération des manifestes
 
-1. **ci-cd.yml** : Tests + déploiement automatique
-2. **docker-build.yml** : Build manuel des images Docker
-
-## Déclencheurs
-
-- **Push** sur `main` ou `develop` : Tests + déploiement
-- **Pull Request** sur `main` : Tests uniquement
-- **Tags** `v*` : Build Docker
-- **Manuel** : Build Docker
+## Aucune configuration requise
+Tous les workflows fonctionnent sans secrets.
