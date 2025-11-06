@@ -5,6 +5,7 @@ return [
     'allowed_methods' => ['*'],
     'allowed_origins' => [
         'http://localhost:3000',
+        'http://localhost:30300',
         'http://contacts_frontend:3000',
         env('FRONTEND_URL', 'http://localhost:3000')
     ],
