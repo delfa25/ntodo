@@ -38,17 +38,32 @@ jobs:
     
     - name: Install Backend Dependencies
       working-directory: ./backend
-      run: composer install --no-dev --optimize-autoloader
+      run: composer install --optimize-autoloader
     
     - name: Install Frontend Dependencies
       working-directory: ./frontend
       run: npm install
     
-    - name: Validate Backend
+    - name: Test Backend
       working-directory: ./backend
+      env:
+        DB_CONNECTION: mysql
+        DB_HOST: 127.0.0.1
+        DB_PORT: 3306
+        DB_DATABASE: contacts_db_test
+        DB_USERNAME: contacts_user
+        DB_PASSWORD: contacts_password
       run: |
-        composer validate
-        echo "Backend validation successful"
+        cp .env.example .env
+        php artisan key:generate
+        php artisan migrate --force
+        php artisan config:clear
+        vendor/bin/phpunit --testdox
+    
+    - name: Test Frontend
+      working-directory: ./frontend
+      run: |
+        npm test -- --coverage --watchAll=false
     
     - name: Build Frontend
       working-directory: ./frontend
